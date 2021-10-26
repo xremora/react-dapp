@@ -1,22 +1,25 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
-contract Greeter {
-    string private greeting;
+contract Token {
+  string public name = "Remora Zero Token";
+  string public symbol = "RZT";
+  uint public totalSupply = 1000000;
+  mapping(address => uint) balances;
 
-    constructor(string memory _greeting) {
-        console.log("Deploying a Greeter with greeting:", _greeting);
-        greeting = _greeting;
-    }
+  constructor() {
+    balances[msg.sender] = totalSupply;
+  }
 
-    function greet() public view returns (string memory) {
-        return greeting;
-    }
+  function transfer(address to, uint amount) external {
+    require(balances[msg.sender] >= amount, "Not enough tokens");
+    balances[msg.sender] -= amount;
+    balances[to] += amount;
+  }
 
-    function setGreeting(string memory _greeting) public {
-        console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
-        greeting = _greeting;
-    }
+  function balanceOf(address account) external view returns (uint) {
+    return balances[account];
+  }
 }
